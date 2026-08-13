@@ -1,4 +1,4 @@
-# stp_data_schemas
+# laz_data_schemas
 Json schemas defining the data products for the Steward Observatory UASAL Space Coronagraph. The schema files are written in **YAML**. The schemas allow the science data to be validated and provide a consistent structure for all 2D image data processed by the `esc_pipeline`. This is crucial for the pipeline, where different calibration steps need to access specific data arrays (e.g., science data, error arrays, data quality flags) in a predictable way. These schemas are a foundational component, ensuring data integrity and interoperability throughout the entire `esc_pipeline`.
 
 ## Summary of Schemas
@@ -23,7 +23,7 @@ To build and install the package:
 
 To uninstall the package:
 
-* `pip uninstall stp_data_schemas`
+* `pip uninstall laz_data_schemas`
 
 
 ## Tests

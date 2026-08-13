@@ -3,8 +3,8 @@ import yaml
 import os
 from jsonschema import validate, RefResolver, ValidationError
 from importlib.resources import files
-from stp_data_schemas.core_schema import CoreSchemas
-
+from laz_data_schemas.core_schema import CoreSchemas
+import numpy as np
 
 class EscImageSchemas:
     """
@@ -18,10 +18,11 @@ class EscImageSchemas:
 
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'core_schema.yaml'
     IMAGE1A_FILE = 'esc_image1A_schema.yaml'
     IMAGE1B_FILE = 'esc_image1B_schema.yaml'
+    IMAGE2_FILE = 'esc_image2_schema.yaml'
     IMAGE3_FILE = 'esc_image3_schema.yaml'    
 
 
@@ -117,6 +118,55 @@ class EscImageSchemas:
         return image_dict
 
 
+    def get_sci_level2_schema(self) -> dict[str, typing.Any]:
+        """
+        Defines the dictionary structure and default values associated 
+        with each Level 1B image schema.
+        
+        Returns
+        -------
+        image_dict : dict
+        Schema converted into a template dictionary structure.
+        """
+        try:
+            # Get path object for Level 1B schema file
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE2_FILE
+        
+            with open(schema_path, 'r') as file:
+                schema_yaml = yaml.safe_load(file)
+        except FileNotFoundError:
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1B_FILE}' was not found.")
+            return {}
+
+        image_dict = {}
+        data_schema = None
+        error_schema = None
+        dq_schema = None
+
+        # Extract schema properties and set up template default items
+        main_properties = schema_yaml.get('properties', {})
+
+        for key, values in main_properties.items():
+            if key == 'data':
+                data_schema = values.get('items')
+            elif key == 'error':
+                error_schema = values.get('items')
+            elif key == 'dq':
+                dq_schema = values.get('items')
+            else:
+                if 'properties' in values and 'value' in values['properties']:
+                    item = {
+                        'value': values['properties'].get('value'),
+                        'description': values.get('description', '')
+                    }
+                    image_dict[key] = item        
+
+        image_dict['data'] = data_schema
+        image_dict['error'] = error_schema
+        image_dict['dq'] = dq_schema
+    
+        return image_dict
+    
         
     def get_sci_level3_schema(self) -> dict[str, typing.Any]:
         """
@@ -235,7 +285,7 @@ class EscImageSchemas:
 
     def validate_level1B_schema(self, data_dict):
         """
-        Validate a dictionary against the Level 1A schema, including external references. 
+        Validate a dictionary against the Level 1B schema, including external references. 
 
         Parameters
         ----------
@@ -271,18 +321,83 @@ class EscImageSchemas:
             print('Level1 image meta data did not validate')
             return False
 
-        # 4. Resolve core_schema.yaml reference and validate main payload
+
+        # 4. Prepare data payload for validation (convert NumPy arrays to lists)
+        payload_to_validate = data_dict.copy()
+        for array_key in ['data', 'error', 'dq']:
+            if isinstance(payload_to_validate.get(array_key), np.ndarray):
+                payload_to_validate[array_key] = payload_to_validate[array_key].tolist()
+            
+        # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
                 base_uri='esc_image1B_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
-            validate(instance=data_dict, schema=main_schema, resolver=resolver)
+            validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
             print(f"Validation of Image1B failed. Error: {e.message}")
-            return False        
+            return False
+
+
+    def validate_level2_schema(self, data_dict):
+        """
+        Validate a dictionary against the Level 2 schema, including external references. 
+
+        Parameters
+        ----------
+        data_dict : `dict`
+          Dictionary containing information to be validated.
+
+        Returns
+        -------
+        output : `boolean`
+          True if successful, False if validation fails.
+        """
+        # 1. Load Core Schema Reference
+        try:
+            schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
+            with open(schema_path, 'r') as file:
+                core_schema = yaml.safe_load(file)
+        except FileNotFoundError:
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
+            return False
+
+        # 2. Load Level 2 Schema
+        try:
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE2_FILE
+            with open(schema_path, 'r') as file:
+                main_schema = yaml.safe_load(file)
+        except FileNotFoundError:
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE2_FILE}' was not found.")
+            return False
+
+        # 3. Validate the core schema metadata block
+        CoreSchema = CoreSchemas()
+        if not CoreSchema.validate_core_schema(data_dict.get('meta', {})):
+            print('Level1 image meta data did not validate')
+            return False
+
+        # 4. Prepare data payload for validation (convert NumPy arrays to lists)
+        payload_to_validate = data_dict.copy()
+        for array_key in ['data', 'error', 'dq']:
+            if isinstance(payload_to_validate.get(array_key), np.ndarray):
+                payload_to_validate[array_key] = payload_to_validate[array_key].tolist()
+                
+        # 5. Resolve core_schema.yaml reference and validate main payload
+        try:
+            resolver = RefResolver(
+                base_uri='esc_image2_schema.yaml',
+                referrer=main_schema,
+                store={'core_schema.yaml': core_schema}
+            )
+            validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
+            return True 
+        except ValidationError as e:
+            print(f"Validation of Image1B failed. Error: {e.message}")
+            return False                
 
         
     def validate_level3_schema(self, data_dict):
@@ -385,4 +500,22 @@ class EscImageSchemas:
         image['meta'] = core_dict
         image['image'] = image_dict
         return image
+    
+
+
+    def get_image2_schema(self) -> dict[str, typing.Any]:        
+        """
+        """
+
+        # instantiate core schema
+        CoreSchema = CoreSchemas()
+        core_dict = CoreSchema.get_sci_core_schema()
+        
+        image_dict = self.get_sci_level2_schema()
+
+        image = {}
+        image['meta'] = core_dict
+        image['image'] = image_dict
+        return image
+    
     

@@ -1,5 +1,5 @@
 [project]
-name = "stp_data_schemas"
+name = "laz_data_schemas"
 description = "Core schemas used for esc pipelines."
 requires-python = ">=3.9"
 classifiers = [ "Programming Language :: Python :: 3" ]

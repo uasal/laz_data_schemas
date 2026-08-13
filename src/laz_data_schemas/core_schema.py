@@ -26,7 +26,7 @@ class CoreSchemas:
     use a validation library to check your data against that dictionary.
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'core_schema.yaml'
     
     def get_sci_core_schema(self) -> dict[str, typing.Any]:

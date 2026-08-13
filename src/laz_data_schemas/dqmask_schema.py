@@ -17,7 +17,7 @@ class DQMaskSchemas:
 
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'reference_schema.yaml'
     IMAGE_FILE = 'dqmask_image_schema.yaml'
 

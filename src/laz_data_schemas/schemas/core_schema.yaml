@@ -232,7 +232,7 @@ properties:
     type: object
     properties:
       value:
-        type: integer
+        type: number
       description:
         type: string
         default: Commanded exposure time in seconds
@@ -240,7 +240,7 @@ properties:
     type: object
     properties:
       value:
-        type: integer
+        type: number
         default: 0
       description:
         type: string

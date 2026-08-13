@@ -1,12 +1,12 @@
 $schema: http://json-schema.org/draft-2020-12/schema#
-$id: esc_image1_schema.yaml
-title: Science Image Level 1B Schema 
-description: Definition of the science image level 1 FITS file and metadata. Extensions are zero indexed.
+$id: flat_image_schema.yaml
+title: Science Image Flat Schema 
+description: Definition of the flat image schema
 type: object
-required: [NAXIS, NAXIS1, NAXIS2, data, error, dq]
+required: [NAXIS, NAXIS1, NAXIS2, data]
 properties:
   meta:
-    $ref: 'core_schema.yaml' 
+    $ref: 'reference.yaml' 
   NAXIS:
     type: object
     properties:
@@ -33,22 +33,8 @@ properties:
         default: size of y axis  
   data:
     type: array
-    description: Represents 2D science data array
+    description: Represents 2D flat array
     items:
       type: array
       items:
        type: number
-  error:
-    type: array
-    description: Represents 2D science error array
-    items:
-      type: array
-      items:
-       type: number
-  dq:
-    type: array
-    description: Represents 2D science dq array
-    items:
-      type: array
-      items:
-       type: integer
