@@ -5,12 +5,12 @@ Json schemas defining the data products for the Steward Observatory UASAL Space 
 * Basic schemas used in esc_pipeline:
   * `core_schema`: Defines the **meta data** associated with the science data, including information from the FITS files and data from a telemetry database.
   * `esc_image_schema`: Defines different levels of **image data**, consisting of metadata and a data array.
-  * `esc_visit_schema`: Defines **visit YAML files**.
-  * `esc_telemetry_database_schema`: Defines the **telemetry data** read from the telemetry database.
 * Calibration reference type schemas:
   * `dark_schema`: Defines the dark calibration reference data.
   *  `dqmask_schema`: Defines the data quality mask calibration reference data.
-  *  `sat_schema`: Defines the saturation limit reference data. There are two limits given per pixel: one for the hard saturation limit and a second one for the non-linearity limit
+  *  `sat_schema`: Defines the saturation limit reference data. There are two limits given per pixel: one for the hard saturation limit and a second one for the non-linearity limit.
+  *  'bias_schema`: Defines the bias frame calibration reference file.
+  *  'flat_schema`: Defines the pixel flat calibration reference file. 
     
 
 ## Build Package
@@ -26,6 +26,3 @@ To uninstall the package:
 * `pip uninstall laz_data_schemas`
 
 
-## Tests
-
-Unit tests will be located in the `tests` directory.
