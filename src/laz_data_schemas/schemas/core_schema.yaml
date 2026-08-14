@@ -339,6 +339,15 @@ properties:
       description:
         type: string
         default:  Outer working angle
+  IS_PSF:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: false
+      description:
+        type: string
+        default: Flag indicating if target is a PSF reference star
   RADESYS:
     type: object
     properties:
