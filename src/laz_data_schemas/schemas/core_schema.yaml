@@ -537,6 +537,33 @@ properties:
       description:
         type: string
         default: Boolen value if bias step is applied
+  S_CRAY:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if bias step is applied
+  S_WCS:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if assign_wcs step is applied
+  S_GAIN:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if gain step is applied
   S_FLAT:
     type: object
     properties:
@@ -609,6 +636,15 @@ properties:
       description:
         type: string
         default: Name of Saturation reference file
+  R_GAIN:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Gain reference file
   VER_PREP:
     type: object
     properties:
