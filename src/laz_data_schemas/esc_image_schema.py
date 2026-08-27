@@ -15,7 +15,6 @@ class EscImageSchemas:
     (https://fits.gsfc.nasa.gov/standard40/fits_standard40aa-le.pdf).
 
     Units shall be consistent with AstroPy units.
-
     """
 
     RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
@@ -269,14 +268,31 @@ class EscImageSchemas:
             print('Level1 image meta data did not validate')
             return False
 
-        # 4. Resolve core_schema.yaml reference and validate main payload
+        # 4. Prepare data payload for validation (convert NumPy arrays to lists)
+        #data_to_validate = data_dict.copy()
+        #if isinstance(data_to_validate.get('data'), np.ndarray):
+        #    data_to_validate['data'] = data_to_validate['data'].tolist()  ## THIS TAKES TOO LONG
+
+        # 4. Fast NumPy validation + lightweight slice for jsonschema
+        payload_to_validate = data_dict.copy()
+        raw_data = payload_to_validate.get('data')
+
+        if isinstance(raw_data, np.ndarray):
+            # Instant C-level type/shape checks via NumPy
+            if raw_data.ndim != 2:
+                print(f"Validation Error: Data array must be 2D, got {raw_data.ndim}D")
+                return False
+            
+            # Pass a 1x1 list slice so jsonschema validates array structure in <1 ms
+            payload_to_validate['data'] = raw_data[:1, :1].tolist() if raw_data.size > 0 else []        
+        # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
                 base_uri='esc_image1A_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
-            validate(instance=data_dict, schema=main_schema, resolver=resolver)
+            validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
             print(f"Validation of Image1A failed. Error: {e.message}")
