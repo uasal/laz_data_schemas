@@ -146,7 +146,7 @@ class DarkSchemas:
         
         # Loop over properties defined in the schema to extract default values
         # set any defaults defined in schema.
-        # loop over the level1a schema
+        # loop over the level 1 schema
         main_properties = schema_yaml.get('properties', {})
 
         for key,values in main_properties.items():

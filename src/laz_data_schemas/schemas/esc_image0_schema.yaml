@@ -1,7 +1,7 @@
 $schema: http://json-schema.org/draft-2020-12/schema#
-$id: esc_image1A_schema.yaml
-title: Science Image Level 1A Schema 
-description: Definition of the science image level 1 FITS file and metadata. Extensions are zero indexed.
+$id: esc_image0_schema.yaml
+title: Science Image Level 0 Schema 
+description: Definition of the science image level 0 FITS file and metadata. Extensions are zero indexed.
 type: object
 required: [NAXIS, NAXIS1, NAXIS2, data]
 properties:

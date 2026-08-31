@@ -19,16 +19,16 @@ class EscImageSchemas:
 
     RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'core_schema.yaml'
-    IMAGE1A_FILE = 'esc_image1A_schema.yaml'
-    IMAGE1B_FILE = 'esc_image1B_schema.yaml'
+    IMAGE0_FILE = 'esc_image0_schema.yaml'
+    IMAGE1_FILE = 'esc_image1_schema.yaml'
     IMAGE2_FILE = 'esc_image2_schema.yaml'
     IMAGE3_FILE = 'esc_image3_schema.yaml'    
 
 
-    def get_sci_level1A_schema(self) -> dict[str, typing.Any]:
+    def get_sci_level0_schema(self) -> dict[str, typing.Any]:
         """
         Defines the dictionary structure and default values associated 
-        with each Level 1A image schema.
+        with each Level 0 image schema.
         
         Returns
         -------
@@ -36,7 +36,7 @@ class EscImageSchemas:
         Schema converted into a template dictionary structure.
         """
         try:
-            # Get path object for Level 1A schema file
+            # Get path object for Level 0 schema file
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1A_FILE
         
             with open(schema_path, 'r') as file:
@@ -67,10 +67,10 @@ class EscImageSchemas:
         return image_dict
     
 
-    def get_sci_level1B_schema(self) -> dict[str, typing.Any]:
+    def get_sci_level1_schema(self) -> dict[str, typing.Any]:
         """
         Defines the dictionary structure and default values associated 
-        with each Level 1B image schema.
+        with each Level 1 image schema.
         
         Returns
         -------
@@ -78,7 +78,7 @@ class EscImageSchemas:
         Schema converted into a template dictionary structure.
         """
         try:
-            # Get path object for Level 1B schema file
+            # Get path object for Level 1 schema file
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1B_FILE
         
             with open(schema_path, 'r') as file:
@@ -120,7 +120,7 @@ class EscImageSchemas:
     def get_sci_level2_schema(self) -> dict[str, typing.Any]:
         """
         Defines the dictionary structure and default values associated 
-        with each Level 1B image schema.
+        with each Level 1 image schema.
         
         Returns
         -------
@@ -128,7 +128,7 @@ class EscImageSchemas:
         Schema converted into a template dictionary structure.
         """
         try:
-            # Get path object for Level 1B schema file
+            # Get path object for Level 1 schema file
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE2_FILE
         
             with open(schema_path, 'r') as file:
@@ -169,7 +169,7 @@ class EscImageSchemas:
         
     def get_sci_level3_schema(self) -> dict[str, typing.Any]:
         """
-        Definites the metadata (fits headers) associated with each Level 1b
+        Definites the metadata (fits headers) associated with each Level 2
         taken by the coronagraph science camera.
 
 
@@ -200,7 +200,7 @@ class EscImageSchemas:
         
         # Loop over properties defined in the schema to extract default values
         # set any defaults defined in schema.
-        # loop over the level1a schema
+        # loop over the level0 schema
         main_properties = schema_yaml.get('properties', {})
 
         for key,values in main_properties.items():
@@ -230,9 +230,9 @@ class EscImageSchemas:
 
 
 
-    def validate_level1A_schema(self, data_dict):
+    def validate_level0_schema(self, data_dict):
         """
-        Validate a dictionary against the Level 1A schema, including external references. 
+        Validate a dictionary against the Level 0 schema, including external references. 
 
         Parameters
         ----------
@@ -253,7 +253,7 @@ class EscImageSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return False
 
-        # 2. Load Level 1A Schema
+        # 2. Load Level 0 Schema
         try:
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1A_FILE
             with open(schema_path, 'r') as file:
@@ -299,9 +299,9 @@ class EscImageSchemas:
             return False
 
 
-    def validate_level1B_schema(self, data_dict):
+    def validate_level1_schema(self, data_dict):
         """
-        Validate a dictionary against the Level 1B schema, including external references. 
+        Validate a dictionary against the Level 1 schema, including external references. 
 
         Parameters
         ----------
@@ -322,7 +322,7 @@ class EscImageSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return False
 
-        # 2. Load Level 1B Schema
+        # 2. Load Level 1 Schema
         try:
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1B_FILE
             with open(schema_path, 'r') as file:
@@ -393,7 +393,7 @@ class EscImageSchemas:
         # 3. Validate the core schema metadata block
         CoreSchema = CoreSchemas()
         if not CoreSchema.validate_core_schema(data_dict.get('meta', {})):
-            print('Level1 image meta data did not validate')
+            print('Level2 image meta data did not validate')
             return False
 
         # 4. Prepare data payload for validation (convert NumPy arrays to lists)
@@ -465,7 +465,7 @@ class EscImageSchemas:
         valid = CoreSchema.validate_core_schema(data_dict['meta'])
         
         if valid is False:
-            print('Level1 image meta data did not validate')
+            print('Level3 image meta data did not validate')
             return False
         
         
@@ -485,7 +485,7 @@ class EscImageSchemas:
             return False
         
 
-    def get_image1A_schema(self) -> dict[str, typing.Any]:        
+    def get_image0_schema(self) -> dict[str, typing.Any]:        
         """
         """
 
@@ -493,7 +493,7 @@ class EscImageSchemas:
         CoreSchema = CoreSchemas()
         core_dict = CoreSchema.get_sci_core_schema()
         
-        image_dict = self.get_sci_level1A_schema()
+        image_dict = self.get_sci_level0_schema()
 
         image = {}
         image['meta'] = core_dict
@@ -502,7 +502,7 @@ class EscImageSchemas:
 
 
 
-    def get_image1B_schema(self) -> dict[str, typing.Any]:        
+    def get_image1_schema(self) -> dict[str, typing.Any]:        
         """
         """
 
@@ -510,7 +510,7 @@ class EscImageSchemas:
         CoreSchema = CoreSchemas()
         core_dict = CoreSchema.get_sci_core_schema()
         
-        image_dict = self.get_sci_level1B_schema()
+        image_dict = self.get_sci_level1_schema()
 
         image = {}
         image['meta'] = core_dict
