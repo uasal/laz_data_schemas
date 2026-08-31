@@ -37,12 +37,12 @@ class EscImageSchemas:
         """
         try:
             # Get path object for Level 0 schema file
-            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1A_FILE
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE0_FILE
         
             with open(schema_path, 'r') as file:
                 schema_yaml = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1A_FILE}' was not found.")
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE0_FILE}' was not found.")
             return {}
 
         image_dict = {}
@@ -79,12 +79,12 @@ class EscImageSchemas:
         """
         try:
             # Get path object for Level 1 schema file
-            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1B_FILE
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1_FILE
         
             with open(schema_path, 'r') as file:
                 schema_yaml = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1B_FILE}' was not found.")
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1_FILE}' was not found.")
             return {}
 
         image_dict = {}
@@ -134,7 +134,7 @@ class EscImageSchemas:
             with open(schema_path, 'r') as file:
                 schema_yaml = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1B_FILE}' was not found.")
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1_FILE}' was not found.")
             return {}
 
         image_dict = {}
@@ -255,11 +255,11 @@ class EscImageSchemas:
 
         # 2. Load Level 0 Schema
         try:
-            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1A_FILE
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE0_FILE
             with open(schema_path, 'r') as file:
                 main_schema = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1A_FILE}' was not found.")
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE0_FILE}' was not found.")
             return False
 
         # 3. Validate the core schema metadata block
@@ -288,14 +288,14 @@ class EscImageSchemas:
         # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
-                base_uri='esc_image1A_schema.yaml',
+                base_uri='esc_image0_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
             validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
-            print(f"Validation of Image1A failed. Error: {e.message}")
+            print(f"Validation of Image0 failed. Error: {e.message}")
             return False
 
 
@@ -324,11 +324,11 @@ class EscImageSchemas:
 
         # 2. Load Level 1 Schema
         try:
-            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1B_FILE
+            schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE1_FILE
             with open(schema_path, 'r') as file:
                 main_schema = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1B_FILE}' was not found.")
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE1_FILE}' was not found.")
             return False
 
         # 3. Validate the core schema metadata block
@@ -347,14 +347,14 @@ class EscImageSchemas:
         # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
-                base_uri='esc_image1B_schema.yaml',
+                base_uri='esc_image1_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
             validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
-            print(f"Validation of Image1B failed. Error: {e.message}")
+            print(f"Validation of Image1 failed. Error: {e.message}")
             return False
 
 
@@ -412,7 +412,7 @@ class EscImageSchemas:
             validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
-            print(f"Validation of Image1B failed. Error: {e.message}")
+            print(f"Validation of Image1 failed. Error: {e.message}")
             return False                
 
         
